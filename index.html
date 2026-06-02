@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue Share Calculator — Sweet Dreams × MC Racing</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23ff2e43'/%3E%3Ctext%20x='16'%20y='24'%20font-family='Arial,sans-serif'%20font-size='22'%20font-weight='bold'%20text-anchor='middle'%20fill='%23fff'%3E$%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="speed-bar" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="wrap">
+      <h1>Revenue&nbsp;Share Calculator</h1>
+      <p class="subtitle">Sweet&nbsp;Dreams <span class="x">×</span> MC&nbsp;Racing</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Shared revenue input -->
+    <section class="revenue-card" aria-labelledby="revenue-label">
+      <label id="revenue-label" for="revenue">Monthly Revenue</label>
+      <div class="revenue-input">
+        <span class="dollar" aria-hidden="true">$</span>
+        <input type="number" id="revenue" min="0" step="100" value="10000" inputmode="decimal" autocomplete="off">
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="add-scenario" class="btn btn-primary" type="button">+ Add scenario</button>
+      <button id="reset" class="btn btn-ghost" type="button">Reset</button>
+    </div>
+
+    <!-- Live comparison (shown when 2+ scenarios) -->
+    <section id="comparison" class="comparison" hidden aria-live="polite"></section>
+
+    <!-- Scenario cards -->
+    <section id="scenarios" class="scenarios"></section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
