@@ -58,6 +58,7 @@ function compute(revenue, brackets) {
   const rev = Math.max(0, Number(revenue) || 0);
   let sdTotal = 0;
   let lower = 0;
+  const rows = [];
 
   for (const b of brackets) {
     const isOpen = (b.upTo === null || b.upTo === undefined || b.upTo === '');
@@ -65,7 +66,9 @@ function compute(revenue, brackets) {
     const rate = Number(b.rate) || 0;
     const top = isOpen ? rev : Math.min(rev, upper);
     const amount = Math.max(0, top - lower);
-    sdTotal += amount * (rate / 100);
+    const sd = amount * (rate / 100);
+    rows.push({ lower, upper, rate, amount, sd, mark: amount - sd, active: amount > 0 });
+    sdTotal += sd;
     lower = isFinite(upper) ? upper : lower;
   }
 
@@ -74,6 +77,7 @@ function compute(revenue, brackets) {
     revenue: rev,
     sdTotal,
     keep,
+    rows,
     effRate: rev > 0 ? (sdTotal / rev) * 100 : 0,
     keepRate: rev > 0 ? (keep / rev) * 100 : 0,
   };
@@ -134,6 +138,18 @@ function removeBracket(id, index) {
 // ---- Rendering ----
 function renderResults(scn) {
   const r = compute(state.revenue, scn.brackets);
+  const active = r.rows.filter((row) => row.active);
+  const breakdown = active.map((row) => {
+    const range = isFinite(row.upper)
+      ? `${fmtMoney(row.lower)} – ${fmtMoney(row.upper)}`
+      : `${fmtMoney(row.lower)}+`;
+    return `<tr>
+        <td class="bd-tier">${range}<span class="bd-rate">${fmtPct(row.rate)}</span></td>
+        <td class="bd-sd">${fmtMoney(row.sd)}</td>
+        <td class="bd-mark">${fmtMoney(row.mark)}</td>
+      </tr>`;
+  }).join('');
+
   return `
     <div class="revenue-total">
       <span class="rt-label">Revenue</span>
@@ -151,6 +167,10 @@ function renderResults(scn) {
         <span class="result-sub">${fmtPct(r.keepRate)} of revenue</span>
       </div>
     </div>
+    ${active.length ? `<table class="breakdown">
+      <thead><tr><th>Bracket</th><th>Sweet Dreams</th><th>Mark</th></tr></thead>
+      <tbody>${breakdown}</tbody>
+    </table>` : ''}
     <p class="totals-note">Take-home before expenses</p>`;
 }
 
@@ -225,10 +245,12 @@ function renderComparison() {
 
   el.innerHTML = `
     <h2>Comparison <span class="muted">at ${fmtMoney(state.revenue)} / mo</span></h2>
-    <table class="compare-table">
-      <thead><tr><th>Scenario</th><th>Sweet Dreams</th><th>Mark</th><th>SD rate</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+    <div class="table-wrap">
+      <table class="compare-table">
+        <thead><tr><th>Scenario</th><th>Sweet Dreams</th><th>Mark</th><th>SD rate</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
 }
 
 function renderAll() {
