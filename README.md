@@ -1,5 +1,7 @@
 # Revenue Share Calculator — Sweet Dreams × MC Racing
 
+**Live:** https://colemarcuccilli.github.io/calculator/
+
 A single-page calculator for the Sweet Dreams × MC Racing monthly revenue-share deal.
 Enter Mark's total monthly revenue once, see how much each side takes home, then
 duplicate the calculator into multiple **scenarios** to compare different bracket
